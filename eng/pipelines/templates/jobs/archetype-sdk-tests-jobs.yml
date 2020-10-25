@@ -28,42 +28,33 @@ parameters:
   default: []
 - name: CloudConfig
   type: object
-  default: []
+  default: {}
 - name: Platforms
   type: object
-  default: []
+  default: {}
 
 jobs:
-  - job: 
+  - job:
     strategy:
       maxParallel: ${{ parameters.MaxParallel }}
-      matrix:
-        ${{ each platform in parameters.Platforms }}:
-          ${{ platform.key }}:
-            DisplayName: ${{ platform.value.DisplayName }}
-            OSVmImage: ${{ platform.value.OSVmImage }}
-            TestTargetFramework: ${{ platform.value.TestTargetFramework }}
-            PlatformPreSteps: ${{ platform.value.PreSteps }}
-            TestMode: ${{ platform.value.TestMode }}
+      matrix: ${{ parameters.Platforms }}
 
     condition: and(succeededOrFailed(), eq(eq(variables['Record'], 'true'), eq('$(TestMode)', 'Record')))
-    displayName: $(DisplayName)
     variables:
       - template: ../variables/globals.yml
       - name: OSVmImage
         value: $(OSVmImage)
+        #  - name: ServiceDirectory
+        #    value: ${{ parameters.ServiceDirectory }}
 
     timeoutInMinutes: ${{ parameters.TimeoutInMinutes }}
 
     pool:
       vmImage: $(OSVmImage)
-    ${{ if $(Container) }}:
+    ${{ if variables['Container'] }}:
       container: $(Container)
 
     steps:
-      - ${{ if $(PlatformPreSteps) }}:
-        - $(PlatformPreSteps)
-
       - ${{ parameters.PreSteps }}
 
       - template: /eng/common/pipelines/templates/steps/verify-agent-os.yml
@@ -77,7 +68,6 @@ jobs:
           Location: ${{ parameters.CloudConfig.Location }}
           ServiceDirectory: '${{ parameters.ServiceDirectory }}'
           SubscriptionConfiguration: ${{ parameters.CloudConfig.SubscriptionConfiguration }}
-          ArmTemplateParameters: ${{ parameters.CloudConfig.ArmTemplateParameters }}
 
       - script: >
           dotnet test eng/service.proj
@@ -95,10 +85,10 @@ jobs:
           DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
           DOTNET_CLI_TELEMETRY_OPTOUT: 1
           DOTNET_MULTILEVEL_LOOKUP: 0
-          AZURE_TEST_MODE: "${{ coalesce($(TestMode), 'None') }}"
+          AZURE_TEST_MODE: "${{ coalesce(variables['TestMode'], 'None') }}"
           ${{ each var in parameters.EnvVars }}:
             ${{ var.key }}: ${{ var.value }}
-          ${{ each v in parameters.CloudConfig.EnvVars }}:
+          ${{ each v in parameters.CloudConfig.SubscriptionConfiguration.EnvironmentVariables }}:
             ${{ v.key }}: ${{ v.value }}
 
       - template: /eng/common/TestResources/remove-test-resources.yml
@@ -116,6 +106,3 @@ jobs:
           mergeTestResults: true
 
       - ${{ parameters.PostSteps }}
-
-      - ${{ if $(PostSteps) }}:
-        - $(PostSteps)

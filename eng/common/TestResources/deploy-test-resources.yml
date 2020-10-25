@@ -27,12 +27,22 @@ steps:
         ${{ parameters.SubscriptionConfiguration }}
       "@ | ConvertFrom-Json -AsHashtable;
 
+      if ($subscriptionConfiguration.ArmTemplateParameters) {
+        $armTemplateParameters = $subscriptionConfiguration.ArmTemplateParameters
+      } else {
+        $armTemplateParameters = ${{ parameters.ArmTemplateParameters }}
+      }
+
+      $subscriptionConfiguration = @"
+        ${{ parameters.SubscriptionConfiguration }}
+      "@ | ConvertFrom-Json -AsHashtable;
+
       eng/common/TestResources/New-TestResources.ps1 `
         -BaseName 'Generated' `
         -ServiceDirectory ${{ parameters.ServiceDirectory }} `
         -Location '${{ parameters.Location }}' `
         -DeleteAfterHours ${{ parameters.DeleteAfterHours }} `
-        -AdditionalParameters ${{ parameters.ArmTemplateParameters }} `
+        -AdditionalParameters $additionalParameters `
         @subscriptionConfiguration `
         -CI `
         -Force `
