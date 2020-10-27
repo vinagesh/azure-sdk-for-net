@@ -138,9 +138,16 @@ if (![string]::IsNullOrWhiteSpace($ServiceDirectory)) {
 }
 
 Log "Deleting resource group '$ResourceGroupName'"
-if (Retry { Remove-AzResourceGroup -Name "$ResourceGroupName" -Force:$Force }) {
-    Write-Verbose "Successfully deleted resource group '$ResourceGroupName'"
+Start-Job -ScriptBlock { 
+    Retry { Remove-AzResourceGroup -Name "$using:ResourceGroupName" -Force:$using:Force } 
 }
+Retry {
+    $group = Get-AzResourceGroup -name $ResourceGroupName
+    if ($group.ProvisioningState == [Microsoft.Azure.Commands.ResourceManager.Cmdlets.SdkModels]::Deleting) {
+        throw "Resource group is not in deleting state"
+    }
+}
+Write-Verbose "Requested async deletion of resource group '$ResourceGroupName'"
 
 $exitActions.Invoke()
 
