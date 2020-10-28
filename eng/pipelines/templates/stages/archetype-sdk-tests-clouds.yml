@@ -25,7 +25,6 @@ parameters:
     AzureChinaCloud:
       SubscriptionConfiguration: $(sub-config-cn-test-resources-test)
 
-
 stages:
   - ${{ each cloud in parameters.CloudConfig }}:
     - stage: ${{ cloud.key }}
@@ -41,4 +40,4 @@ stages:
                 ${{ platform.key }}: ${{ platform.value }}
           CloudConfig:
             SubscriptionConfiguration: ${{ cloud.value.SubscriptionConfiguration }}
-            Location: coalesce('${{ parameters.Location }}', '${{ cloud.value.Location }}')
+            Location: ${{ coalesce(parameters.Location, cloud.value.Location) }}
