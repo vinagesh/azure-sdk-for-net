@@ -41,13 +41,11 @@ jobs:
         ${{ each platform in parameters.Platforms }}:
           ${{ platform.key }}:
             PlatformKey: ${{ platform.key }}
-            DisplayName: ${{ platform.value.DisplayName }}
             OSVmImage: ${{ platform.value.OSVmImage }}
             TestTargetFramework: ${{ platform.value.TestTargetFramework }}
             TestMode: ${{ platform.value.TestMode }}
 
     condition: and(succeededOrFailed(), eq(eq(variables['Record'], 'true'), eq('$(TestMode)', 'Record')))
-    displayName: $(DisplayName)
     variables:
       - template: ../variables/globals.yml
       - name: OSVmImage
