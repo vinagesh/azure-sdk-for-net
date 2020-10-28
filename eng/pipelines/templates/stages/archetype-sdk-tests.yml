@@ -22,7 +22,7 @@ parameters:
   default: 60
 - name: Location
   type: string
-  default: 'foobar'
+  default: ''
 - name: TestCanary
   type: boolean
   default: false
