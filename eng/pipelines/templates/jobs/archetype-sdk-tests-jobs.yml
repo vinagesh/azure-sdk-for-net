@@ -61,7 +61,7 @@ jobs:
       # Non-string types aren't accepted as matrix variables, so select PreSteps here
       - ${{ each platform in parameters.Platforms }}:
         - ${{ if and(eq(platform.key, variables['System.JobDisplayName']), platform.PreSteps) }}:
-          - ${{ platform.PreSteps }}
+            ${{ platform.PreSteps }}
 
       - ${{ parameters.PreSteps }}
 
