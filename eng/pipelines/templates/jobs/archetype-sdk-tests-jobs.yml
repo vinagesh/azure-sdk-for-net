@@ -40,8 +40,9 @@ jobs:
       matrix:
         ${{ each platform in parameters.Platforms }}:
           ${{ platform.key }}:
-            ${{ each var in platform.value }}:
-              ${{ var.key }}: ${{ var.value }}
+            OSVmImage: ${{ platform.value.OSVmImage }}
+            TestTargetFramework: ${{ platform.value.TestTargetFramework }}
+            TestMode: ${{ platform.value.TestMode }}
 
     condition: and(succeededOrFailed(), eq(eq(variables['Record'], 'true'), eq('$(TestMode)', 'Record')))
     variables:
