@@ -15,15 +15,15 @@ parameters:
   default:
     AzureCloud:
       SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-test)
-    #  AzureCloud_Preview:
-    #    SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-preview-test)
-    #  AzureCloud_Canary:
-    #    SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-preview-test)
-    #    Location: 'eastus2euap'
-    #  AzureUsGovCloud:
-    #    SubscriptionConfiguration: $(sub-config-gov-test-resources-test)
-    #  AzureChinaCloud:
-    #    SubscriptionConfiguration: $(sub-config-cn-test-resources-test)
+    AzureCloud_Preview:
+      SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-preview-test)
+    AzureCloud_Canary:
+      SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-preview-test)
+      Location: 'eastus2euap'
+    AzureUsGovCloud:
+      SubscriptionConfiguration: $(sub-config-gov-test-resources-test)
+    AzureChinaCloud:
+      SubscriptionConfiguration: $(sub-config-cn-test-resources-test)
 
 
 stages:
@@ -41,4 +41,4 @@ stages:
                 ${{ platform.key }}: ${{ platform.value }}
           CloudConfig:
             SubscriptionConfiguration: ${{ cloud.value.SubscriptionConfiguration }}
-            Location: ${{ cloud.value.Location }}
+            Location: coalesce('${{ parameters.Location }}', '${{ cloud.value.Location }}')
