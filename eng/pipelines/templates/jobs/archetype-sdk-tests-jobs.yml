@@ -40,10 +40,8 @@ jobs:
       matrix:
         ${{ each platform in parameters.Platforms }}:
           ${{ platform.key }}:
-            PlatformKey: ${{ platform.key }}
-            OSVmImage: ${{ platform.value.OSVmImage }}
-            TestTargetFramework: ${{ platform.value.TestTargetFramework }}
-            TestMode: ${{ platform.value.TestMode }}
+            ${{ each var in platform.value }}:
+              ${{ var.key }}: ${{ var.value }}
 
     condition: and(succeededOrFailed(), eq(eq(variables['Record'], 'true'), eq('$(TestMode)', 'Record')))
     variables:
@@ -61,7 +59,7 @@ jobs:
     steps:
       # Non-string types aren't accepted as matrix variables, so select PreSteps here
       - ${{ each platform in parameters.Platforms }}:
-        - ${{ if and(eq(platform.key, variables['PlatformKey']), platform.PreSteps) }}:
+        - ${{ if and(eq(platform.key, variables['System.JobDisplayName']), platform.PreSteps) }}:
           - ${{ platform.PreSteps }}
 
       - ${{ parameters.PreSteps }}
