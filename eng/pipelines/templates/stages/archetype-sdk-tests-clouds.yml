@@ -29,7 +29,7 @@ parameters:
 stages:
   - ${{ each cloud in parameters.CloudConfig }}:
     - stage: ${{ cloud.key }}
-      condition: or(eq(variables['Build.Reason'], 'Manual'), contains('${{ parameters.Clouds }}', '${{ cloud.key }}'))
+      condition: contains('${{ parameters.Clouds }}', '${{ cloud.key }}')
       dependsOn: []
       jobs:
       - template: ../jobs/archetype-sdk-tests-platforms.yml
@@ -37,9 +37,8 @@ stages:
           AdditionalParameters: ${{ parameters.AdditionalParameters }}
           Platforms:
             ${{ each platform in parameters.Platforms }}:
-              ${{ if contains(cloud.key, coalesce(platform.value.SupportedClouds, join(',', parameters.CloudConfig))) }}:
+              ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
                 ${{ platform.key }}: ${{ platform.value }}
           CloudConfig:
-            DisplayName: ${{ cloud.key }}
             SubscriptionConfiguration: ${{ cloud.value.SubscriptionConfiguration }}
             Location: ${{ cloud.value.Location }}
