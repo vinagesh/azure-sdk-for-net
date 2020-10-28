@@ -63,7 +63,7 @@ jobs:
         #- ${{ if and(eq(platform.key, variables['System.JobDisplayName']), platform.value.PreSteps) }}:
         - ${{ if platform.value.PreSteps }}:
           - ${{ platform.value.PreSteps }}
-          - script |
+          - script: |
               FOOBAR: ${{ variables['System.JobDisplayName'] }}
 
       - ${{ parameters.PreSteps }}
