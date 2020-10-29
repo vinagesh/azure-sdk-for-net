@@ -32,20 +32,20 @@ parameters:
 - name: TestSetupSteps
   type: stepList
   default: []
-- name: CloudConfig
-  type: object
-  default:
-    AzureCloud_Public:
-      SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-test)
-    AzureCloud_Preview:
-      SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-preview-test)
-    AzureCloud_Canary:
-      SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-preview-test)
-      Location: 'eastus2euap'
-    AzureUsGovCloud:
-      SubscriptionConfiguration: $(sub-config-gov-test-resources-test)
-    AzureChinaCloud:
-      SubscriptionConfiguration: $(sub-config-cn-test-resources-test)
+  ### - name: CloudConfig
+  ###   type: object
+  ###   default:
+  ###     AzureCloud_Public:
+  ###       SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-test)
+  ###     AzureCloud_Preview:
+  ###       SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-preview-test)
+  ###     AzureCloud_Canary:
+  ###       SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-preview-test)
+  ###       Location: 'eastus2euap'
+  ###     AzureUsGovCloud:
+  ###       SubscriptionConfiguration: $(sub-config-gov-test-resources-test)
+  ###     AzureChinaCloud:
+  ###       SubscriptionConfiguration: $(sub-config-cn-test-resources-test)
 - name: Platforms
   type: object
   default:
@@ -104,9 +104,9 @@ stages:
   parameters:
     Clouds: ${{ parameters.Clouds }}
     Location: ${{ parameters.Location }}
-    CloudConfig:
-      AzureCloud_Public:
-        SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-test)
+    ### CloudConfig:
+    ###   AzureCloud_Public:
+    ###     SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-test)
     Platforms:
       MacOS:
         DisplayName: "Test on MacOS"
