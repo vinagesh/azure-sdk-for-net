@@ -28,10 +28,10 @@ parameters:
   default: []
 - name: CloudConfig
   type: object
-  default: []
+  default: {}
 - name: Platforms
   type: object
-  default: []
+  default: {}
 
 jobs:
   - job:
