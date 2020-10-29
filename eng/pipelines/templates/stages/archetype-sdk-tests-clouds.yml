@@ -29,7 +29,7 @@ parameters:
       SubscriptionConfiguration: $(sub-config-cn-test-resources-test)
 
 stages:
-- stage: ${{ cloud.key }}
+- stage: foo
   dependsOn: []
   jobs:
   - template: ../jobs/archetype-sdk-tests-jobs.yml

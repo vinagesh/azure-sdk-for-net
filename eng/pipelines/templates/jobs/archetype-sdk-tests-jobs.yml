@@ -57,9 +57,6 @@ jobs:
       container: $(Container)
 
     steps:
-      - ${{ if parameters.Platform.PreSteps }}:
-        - ${{ parameters.Platform.PreSteps }}
-
       - ${{ parameters.PreSteps }}
 
       - template: /eng/common/pipelines/templates/steps/verify-agent-os.yml
