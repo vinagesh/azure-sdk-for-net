@@ -10,9 +10,9 @@ parameters:
 - name: Platforms
   type: object
   default: {}
-#- name: CloudConfig
-#  type: object
-#  default: {}
+# - name: CloudConfig
+#   type: object
+#   default: {}
 - name: CloudConfig
   type: object
   default:
@@ -29,6 +29,16 @@ parameters:
       SubscriptionConfiguration: $(sub-config-cn-test-resources-test)
 
 stages:
+- stage: ${{ cloud.key }}
+  dependsOn: []
+  jobs:
+  - template: ../jobs/archetype-sdk-tests-jobs.yml
+    parameters:
+      Platforms:
+        MacOS:
+          Test: foo
+      CloudConfig:
+        SubscriptionConfiguration: "foo"
 - ${{ each cloud in parameters.CloudConfig }}:
   - ${{ if contains(parameters.Clouds, cloud.key) }}:
     - stage: ${{ cloud.key }}
@@ -37,9 +47,11 @@ stages:
       - template: ../jobs/archetype-sdk-tests-jobs.yml
         parameters:
           Platforms:
-            ${{ each platform in parameters.Platforms }}:
-              ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
-                ${{ insert }}: ${{ platform }}
+            MacOS:
+              Test: foo
+#            ${{ each platform in parameters.Platforms }}:
+#              ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
+#                ${{ insert }}: ${{ platform }}
           CloudConfig:
             SubscriptionConfiguration: ${{ cloud.value }}
             Location: ${{ coalesce(parameters.Location, cloud.value.Location) }}
