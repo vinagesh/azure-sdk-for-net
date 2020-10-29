@@ -32,20 +32,20 @@ parameters:
 - name: TestSetupSteps
   type: stepList
   default: []
-  ### - name: CloudConfig
-  ###   type: object
-  ###   default:
-  ###     AzureCloud_Public:
-  ###       SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-test)
-  ###     AzureCloud_Preview:
-  ###       SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-preview-test)
-  ###     AzureCloud_Canary:
-  ###       SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-preview-test)
-  ###       Location: 'eastus2euap'
-  ###     AzureUsGovCloud:
-  ###       SubscriptionConfiguration: $(sub-config-gov-test-resources-test)
-  ###     AzureChinaCloud:
-  ###       SubscriptionConfiguration: $(sub-config-cn-test-resources-test)
+- name: CloudConfig
+  type: object
+  default:
+    AzureCloud_Public:
+      SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-test)
+    AzureCloud_Preview:
+      SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-preview-test)
+    AzureCloud_Canary:
+      SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-preview-test)
+      Location: 'eastus2euap'
+    AzureUsGovCloud:
+      SubscriptionConfiguration: $(sub-config-gov-test-resources-test)
+    AzureChinaCloud:
+      SubscriptionConfiguration: $(sub-config-cn-test-resources-test)
 - name: Platforms
   type: object
   default:
@@ -100,27 +100,44 @@ parameters:
             #        SupportedClouds: 'AzureCloud'
 
 stages:
-- template: ./archetype-sdk-tests-clouds.yml
-  parameters:
-    Clouds: ${{ parameters.Clouds }}
-    Location: ${{ parameters.Location }}
-    ### CloudConfig:
-    ###   AzureCloud_Public:
-    ###     SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-test)
-    Platforms:
-      MacOS:
-        DisplayName: "Test on MacOS"
-        OSVmImage: "macOS-10.15"
-        TestTargetFramework: netcoreapp2.1
-        SupportedClouds: 'AzureCloud'
-      # ${{ insert }}: ${{ parameters.Platforms }}
-      # ${{ insert }}: ${{ parameters.AdditionalPlatforms }}
-    AdditionalParameters:
-      PreSteps: ${{ parameters.PreSteps }}
-      PostSteps: ${{ parameters.PostSteps }}
-      EnvVars: ${{ parameters.EnvVars }}
-      MaxParallel: ${{ parameters.MaxParallel }}
-      BuildInParallel: ${{ parameters.BuildInParallel }}
-      TimeoutInMinutes: ${{ parameters.TimeoutInMinutes }}
-      ServiceDirectory: ${{ parameters.ServiceDirectory }}
-      TestSetupSteps: ${{ parameters.TestSetupSteps }}
+- ${{ each cloud in parameters.CloudConfig }}:
+  - ${{ if contains(parameters.Clouds, cloud.key) }}:
+    - stage: ${{ cloud.key }}
+      dependsOn: []
+      jobs:
+      - template: ../jobs/archetype-sdk-tests-jobs.yml
+        parameters:
+          Platforms:
+            ${{ each platform in parameters.Platforms }}:
+              ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
+                ${{ platform.key }}: ${{ platform.value }}
+          CloudConfig:
+            SubscriptionConfiguration: ${{ cloud.value }}
+            Location: ${{ coalesce(parameters.Location, cloud.value.Location) }}
+          ${{ each param in parameters.AdditionalParameters }}:
+            ${{ param.key }}: ${{ param.value }}
+
+  ### - template: ./archetype-sdk-tests-clouds.yml
+  ###   parameters:
+  ###     Clouds: ${{ parameters.Clouds }}
+  ###     Location: ${{ parameters.Location }}
+  ###     ### CloudConfig:
+  ###     ###   AzureCloud_Public:
+  ###     ###     SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-test)
+  ###     Platforms:
+  ###       MacOS:
+  ###         DisplayName: "Test on MacOS"
+  ###         OSVmImage: "macOS-10.15"
+  ###         TestTargetFramework: netcoreapp2.1
+  ###         SupportedClouds: 'AzureCloud'
+  ###       # ${{ insert }}: ${{ parameters.Platforms }}
+  ###       # ${{ insert }}: ${{ parameters.AdditionalPlatforms }}
+  ###     AdditionalParameters:
+  ###       PreSteps: ${{ parameters.PreSteps }}
+  ###       PostSteps: ${{ parameters.PostSteps }}
+  ###       EnvVars: ${{ parameters.EnvVars }}
+  ###       MaxParallel: ${{ parameters.MaxParallel }}
+  ###       BuildInParallel: ${{ parameters.BuildInParallel }}
+  ###       TimeoutInMinutes: ${{ parameters.TimeoutInMinutes }}
+  ###       ServiceDirectory: ${{ parameters.ServiceDirectory }}
+  ###       TestSetupSteps: ${{ parameters.TestSetupSteps }}
