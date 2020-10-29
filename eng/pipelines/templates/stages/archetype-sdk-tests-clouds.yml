@@ -9,6 +9,7 @@ parameters:
   type: string
 - name: Platforms
   type: object
+  default: {}
 - name: CloudConfig
   type: object
   default: {}
