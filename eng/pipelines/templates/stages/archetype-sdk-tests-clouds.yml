@@ -11,6 +11,7 @@ parameters:
   type: object
 - name: CloudConfig
   type: object
+  default: {}
 
 stages:
 - ${{ each cloud in parameters.CloudConfig }}:
