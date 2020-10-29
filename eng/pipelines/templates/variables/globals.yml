@@ -9,3 +9,4 @@ variables:
     BuildConfiguration: 'Release'
   DocFxVersion: 'v2.56.1'
   CollectCoverage: false
+  LiveTestClouds: 'AzureCloud_Public,AzureCloud_Canary'

@@ -1,7 +1,7 @@
 parameters:
 - name: Clouds
   type: string
-  default: 'AzureCloud'
+  default: ''
 - name: Platforms
   type: object
   default: []
@@ -13,7 +13,7 @@ parameters:
 - name: CloudConfig
   type: object
   default:
-    AzureCloud:
+    AzureCloud_Public:
       SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-test)
     AzureCloud_Preview:
       SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-preview-test)
@@ -27,7 +27,7 @@ parameters:
 
 stages:
   - ${{ each cloud in parameters.CloudConfig }}:
-    - ${{ if or(eq(variables['build.reason'], 'Manual'), contains('${{ parameters.Clouds }}', '${{ cloud.key }}')) }}:
+    - ${{ if or(contains(variables['LiveTestClouds'], cloud.key), contains(parameters.Clouds, cloud.key)) }}:
       - stage: ${{ cloud.key }}
         dependsOn: []
         jobs:
