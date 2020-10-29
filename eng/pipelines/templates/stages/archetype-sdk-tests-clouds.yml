@@ -29,16 +29,6 @@ parameters:
       SubscriptionConfiguration: $(sub-config-cn-test-resources-test)
 
 stages:
-- stage: foo
-  dependsOn: []
-  jobs:
-  - template: ../jobs/archetype-sdk-tests-jobs.yml
-    parameters:
-      Platforms:
-        MacOS:
-          Test: foo
-      CloudConfig:
-        SubscriptionConfiguration: "foo"
 - ${{ each cloud in parameters.CloudConfig }}:
   - ${{ if contains(parameters.Clouds, cloud.key) }}:
     - stage: ${{ cloud.key }}
