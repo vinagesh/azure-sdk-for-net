@@ -113,8 +113,8 @@ stages:
         OSVmImage: "macOS-10.15"
         TestTargetFramework: netcoreapp2.1
         SupportedClouds: 'AzureCloud'
-      ${{ insert }}: ${{ parameters.Platforms }}
-      ${{ insert }}: ${{ parameters.AdditionalPlatforms }}
+      # ${{ insert }}: ${{ parameters.Platforms }}
+      # ${{ insert }}: ${{ parameters.AdditionalPlatforms }}
     AdditionalParameters:
       PreSteps: ${{ parameters.PreSteps }}
       PostSteps: ${{ parameters.PostSteps }}
