@@ -29,18 +29,6 @@ parameters:
       SubscriptionConfiguration: $(sub-config-cn-test-resources-test)
 
 stages:
-  - stage: Test
-    jobs:
-    - template: ../jobs/archetype-sdk-tests-jobs.yml
-      parameters:
-        Platforms:
-          Linux_NetCore:
-            DisplayName: "Test on Linux"
-            OSVmImage: "ubuntu-18.04"
-            TestTargetFramework: netcoreapp2.1
-        CloudConfig:
-          AzureCloud_Public:
-            SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-test)
   - ${{ each cloud in parameters.CloudConfig }}:
     - ${{ if contains(parameters.Clouds, cloud.key) }}:
       - stage: ${{ cloud.key }}
