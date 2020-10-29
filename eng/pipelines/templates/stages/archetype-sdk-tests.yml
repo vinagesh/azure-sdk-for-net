@@ -54,8 +54,8 @@ parameters:
         DisplayName: "Test on Linux"
         OSVmImage: "ubuntu-18.04"
         TestTargetFramework: netcoreapp2.1
-        PreSteps:
-          - template: /eng/common/pipelines/templates/steps/bypass-local-dns.yml
+        #        PreSteps:
+        #  - template: /eng/common/pipelines/templates/steps/bypass-local-dns.yml
             #      Windows_NetCore:
             #        DisplayName: "Test on Windows for NetCoreApp"
             #        OSVmImage: "windows-2019"
