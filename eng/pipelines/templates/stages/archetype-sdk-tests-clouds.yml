@@ -28,7 +28,7 @@ parameters:
 stages:
   - ${{ each cloud in parameters.CloudConfig }}:
     - stage: ${{ cloud.key }}
-      condition: contains('${{ parameters.Clouds }}', '${{ cloud.key }}')
+      condition: or(eq(variables['build.reason'], 'Manual'), contains('${{ parameters.Clouds }}', '${{ cloud.key }}'))
       dependsOn: []
       jobs:
       - template: ../jobs/archetype-sdk-tests-platforms.yml

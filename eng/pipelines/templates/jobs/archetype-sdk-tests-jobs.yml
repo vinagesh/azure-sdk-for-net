@@ -64,12 +64,6 @@ jobs:
         #- ${{ if and(eq(platform.key, variables['PlatformKey']), platform.value.PreSteps) }}:
         - ${{ if platform.value.PreSteps }}:
           - ${{ platform.value.PreSteps }}
-          - script: |
-              FOOBAR: ${{ variables['PlatformKey'] }}
-
-      - ${{ each varr in variables }}:
-        - script: |
-            VAR: ${{ varr.key }}: ${{ varr.value }}
 
       - ${{ parameters.PreSteps }}
 
