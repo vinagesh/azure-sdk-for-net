@@ -108,6 +108,11 @@ stages:
       AzureCloud_Public:
         SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-test)
     Platforms:
+      MacOS:
+        DisplayName: "Test on MacOS"
+        OSVmImage: "macOS-10.15"
+        TestTargetFramework: netcoreapp2.1
+        SupportedClouds: 'AzureCloud'
       ${{ insert }}: ${{ parameters.Platforms }}
       ${{ insert }}: ${{ parameters.AdditionalPlatforms }}
     AdditionalParameters:
