@@ -10,9 +10,10 @@ parameters:
   default: []
 
 jobs:
-- template: ./archetype-sdk-tests-jobs.yml
-  parameters:
-    Platforms: ${{ parameters.Platforms }}
-    CloudConfig: ${{ parameters.CloudConfig }}
-    ${{ each param in parameters.AdditionalParameters }}:
-      ${{ param.key }}: ${{ param.value }}
+- ${{ each platform in parameters.Platforms }}:
+  - template: ./archetype-sdk-tests-jobs.yml
+    parameters:
+      Platform: ${{ platform }}
+      CloudConfig: ${{ parameters.CloudConfig }}
+      ${{ each param in parameters.AdditionalParameters }}:
+        ${{ param.key }}: ${{ param.value }}

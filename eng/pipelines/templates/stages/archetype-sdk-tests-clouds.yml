@@ -27,17 +27,17 @@ parameters:
 
 stages:
   - ${{ each cloud in parameters.CloudConfig }}:
-    - ${{ if or(contains(variables['LiveTestClouds'], cloud.key), contains(parameters.Clouds, cloud.key)) }}:
+    - ${{ if contains(parameters.Clouds, cloud.key) }}:
       - stage: ${{ cloud.key }}
         dependsOn: []
         jobs:
-        - template: ../jobs/archetype-sdk-tests-platforms.yml
-          parameters:
-            AdditionalParameters: ${{ parameters.AdditionalParameters }}
-            Platforms:
-              ${{ each platform in parameters.Platforms }}:
-                ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
-                  ${{ platform.key }}: ${{ platform.value }}
-            CloudConfig:
-              SubscriptionConfiguration: ${{ cloud.value.SubscriptionConfiguration }}
-              Location: ${{ coalesce(parameters.Location, cloud.value.Location) }}
+        - ${{ each platform in parameters.Platforms }}:
+          - ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
+            - template: ../jobs/archetype-sdk-tests-jobs.yml
+              parameters:
+                Platform: ${{ platform }}
+                CloudConfig:
+                  SubscriptionConfiguration: ${{ cloud.value }}
+                  Location: ${{ coalesce(parameters.Location, cloud.value.Location) }}
+                ${{ each param in parameters.AdditionalParameters }}:
+                  ${{ param.key }}: ${{ param.value }}

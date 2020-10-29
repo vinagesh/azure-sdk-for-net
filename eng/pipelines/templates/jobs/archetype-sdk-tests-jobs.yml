@@ -29,22 +29,13 @@ parameters:
 - name: CloudConfig
   type: object
   default: []
-- name: Platforms
+- name: Platform
   type: object
   default: []
 
 jobs:
-  - job: 
-    strategy:
-      maxParallel: ${{ parameters.MaxParallel }}
-      matrix:
-        ${{ each platform in parameters.Platforms }}:
-          ${{ platform.key }}:
-            PlatformKey: ${{ platform.key }}
-            OSVmImage: ${{ platform.value.OSVmImage }}
-            TestTargetFramework: ${{ platform.value.TestTargetFramework }}
-            TestMode: ${{ platform.value.TestMode }}
-
+  - job:
+    displayName: ${{ parameters.Platform.DisplayName }}
     condition: and(succeededOrFailed(), eq(eq(variables['Record'], 'true'), eq('$(TestMode)', 'Record')))
     variables:
       - template: ../variables/globals.yml
@@ -59,10 +50,8 @@ jobs:
       container: $(Container)
 
     steps:
-      # Non-string types aren't accepted as matrix variables, so select PreSteps here
-      - ${{ each platform in parameters.Platforms }}:
-        - ${{ if and(eq(platform.key, variables['PlatformKey']), platform.value.PreSteps) }}:
-          - ${{ platform.value.PreSteps }}
+      - ${{ if parameters.Platform.PreSteps }}:
+        - ${{ parameters.Platform.PreSteps }}
 
       - ${{ parameters.PreSteps }}
 
