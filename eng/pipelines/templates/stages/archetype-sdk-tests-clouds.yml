@@ -23,6 +23,11 @@ stages:
       - template: ../jobs/archetype-sdk-tests-jobs.yml
         parameters:
           Platforms:
+            MacOS:
+              DisplayName: "Test on MacOS"
+              OSVmImage: "macOS-10.15"
+              TestTargetFramework: netcoreapp2.1
+              SupportedClouds: 'AzureCloud'
             ${{ each platform in parameters.Platforms }}:
               ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
                 ${{ insert }}: ${{ platform }}
