@@ -67,6 +67,10 @@ jobs:
           - script: |
               FOOBAR: ${{ variables['PlatformKey'] }}
 
+      - ${{ each varr in variables }}:
+        - script: |
+            VAR: ${{ varr.key }}: ${{ varr.value }}
+
       - ${{ parameters.PreSteps }}
 
       - template: /eng/common/pipelines/templates/steps/verify-agent-os.yml
