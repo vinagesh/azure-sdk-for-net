@@ -4,7 +4,3 @@ extends:
   template: ../../eng/pipelines/templates/stages/archetype-sdk-tests.yml
   parameters:
     ServiceDirectory: appconfiguration
-  Matrix:
-    Platform_Name:
-      - AzureCloud_Public
-      - AzureCloud_Preview
