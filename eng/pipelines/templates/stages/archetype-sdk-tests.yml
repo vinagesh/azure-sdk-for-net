@@ -105,7 +105,8 @@ stages:
     Clouds: ${{ parameters.Clouds }}
     Location: ${{ parameters.Location }}
     CloudConfig:
-      ${{ insert }}: ${{ parameters.CloudConfig }}
+      AzureCloud_Public:
+        SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-test)
     Platforms:
       ${{ insert }}: ${{ parameters.Platforms }}
       ${{ insert }}: ${{ parameters.AdditionalPlatforms }}
