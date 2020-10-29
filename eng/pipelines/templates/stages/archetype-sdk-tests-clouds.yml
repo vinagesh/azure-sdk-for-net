@@ -2,42 +2,30 @@ parameters:
 - name: Clouds
   type: string
   default: ''
-- name: Platforms
-  type: object
-  default: []
 - name: AdditionalParameters
   type: object
   default: []
 - name: Location
   type: string
+- name: Platforms
+  type: object
 - name: CloudConfig
   type: object
-  default:
-    AzureCloud_Public:
-      SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-test)
-    AzureCloud_Preview:
-      SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-preview-test)
-    AzureCloud_Canary:
-      SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-preview-test)
-      Location: 'eastus2euap'
-    AzureUsGovCloud:
-      SubscriptionConfiguration: $(sub-config-gov-test-resources-test)
-    AzureChinaCloud:
-      SubscriptionConfiguration: $(sub-config-cn-test-resources-test)
 
 stages:
-  - ${{ each cloud in parameters.CloudConfig }}:
-    - ${{ if contains(parameters.Clouds, cloud.key) }}:
-      - stage: ${{ cloud.key }}
-        dependsOn: []
-        jobs:
-        - ${{ each platform in parameters.Platforms }}:
-          - ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
-            - template: ../jobs/archetype-sdk-tests-jobs.yml
-              parameters:
-                Platform: ${{ platform }}
-                CloudConfig:
-                  SubscriptionConfiguration: ${{ cloud.value }}
-                  Location: ${{ coalesce(parameters.Location, cloud.value.Location) }}
-                ${{ each param in parameters.AdditionalParameters }}:
-                  ${{ param.key }}: ${{ param.value }}
+- ${{ each cloud in parameters.CloudConfig }}:
+  - ${{ if contains(parameters.Clouds, cloud.key) }}:
+    - stage: ${{ cloud.key }}
+      dependsOn: []
+      jobs:
+      - template: ../jobs/archetype-sdk-tests-jobs.yml
+        parameters:
+          Platforms:
+            ${{ each platform in parameters.Platforms }}:
+              ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
+                ${{ platform }}
+          CloudConfig:
+            SubscriptionConfiguration: ${{ cloud.value }}
+            Location: ${{ coalesce(parameters.Location, cloud.value.Location) }}
+          ${{ each param in parameters.AdditionalParameters }}:
+            ${{ param.key }}: ${{ param.value }}
