@@ -15,6 +15,20 @@ parameters:
   default: {}
 
 stages:
+- stage: FOOBAR
+  dependsOn: []
+  jobs:
+  - template: ../jobs/archetype-sdk-tests-jobs.yml
+    parameters:
+      Platforms:
+        ${{ each platform in parameters.Platforms }}:
+          ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), 'AzureCloud') }}:
+            ${{ insert }}: ${{ platform }}
+      CloudConfig:
+        SubscriptionConfiguration: ${{ cloud.value }}
+        Location: ${{ coalesce(parameters.Location, cloud.value.Location) }}
+      ${{ each param in parameters.AdditionalParameters }}:
+        ${{ param.key }}: ${{ param.value }}
 - ${{ each cloud in parameters.CloudConfig }}:
   - ${{ if contains(parameters.Clouds, cloud.key) }}:
     - stage: ${{ cloud.key }}
@@ -23,11 +37,6 @@ stages:
       - template: ../jobs/archetype-sdk-tests-jobs.yml
         parameters:
           Platforms:
-            MacOS:
-              DisplayName: "Test on MacOS"
-              OSVmImage: "macOS-10.15"
-              TestTargetFramework: netcoreapp2.1
-              SupportedClouds: 'AzureCloud'
             ${{ each platform in parameters.Platforms }}:
               ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
                 ${{ insert }}: ${{ platform }}
