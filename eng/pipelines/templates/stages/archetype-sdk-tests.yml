@@ -76,6 +76,10 @@ parameters:
       TestTargetFramework: netcoreapp2.1
       AdditionalTestArguments: /p:AutoUpdateSessionRecords=true
       SupportedClouds: 'AzureCloud'
+    Linux_NetCore_Keyring:
+      OSVmImage: "ubuntu-18.04"
+      TestTargetFramework: 'netcoreapp2.1'
+      SupportedClouds: 'Public,Canary,Preview'
 - name: PlatformPreSteps
   type: object
   default:
