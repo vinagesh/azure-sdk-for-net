@@ -35,16 +35,16 @@ parameters:
 - name: CloudConfig
   type: object
   default:
-    - AzureCloud_Public:
+    AzureCloud_Public:
       SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-test)
-    - AzureCloud_Preview:
+    AzureCloud_Preview:
       SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-preview-test)
-    - AzureCloud_Canary:
+    AzureCloud_Canary:
       SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-preview-test)
       Location: 'eastus2euap'
-    - AzureUsGovCloud:
+    AzureUsGovCloud:
       SubscriptionConfiguration: $(sub-config-gov-test-resources-test)
-    - AzureChinaCloud:
+    AzureChinaCloud:
       SubscriptionConfiguration: $(sub-config-cn-test-resources-test)
 - name: Platforms
   type: object
