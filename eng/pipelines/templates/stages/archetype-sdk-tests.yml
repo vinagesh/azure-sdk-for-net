@@ -131,7 +131,7 @@ stages:
           Platforms:
             ${{ each platform in parameters.Platforms }}:
               ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
-                ${{ insert }}: ${{ platform }}
+                ${{ platform.key }}: ${{ platform.value }}
                 #${{ each platform in parameters.AdditionalPlatforms }}:
                 #  ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
                 #    ${{ platform.key }}: ${{ platform.value }}
