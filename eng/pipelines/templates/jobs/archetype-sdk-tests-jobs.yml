@@ -47,8 +47,10 @@ jobs:
       - template: ../variables/globals.yml
       - name: OSVmImage
         value: $(OSVmImage)
-        #  - name: ServiceDirectory
-        #    value: ${{ parameters.ServiceDirectory }}
+      - name: Target
+        value: $[ coalesce(variables.Container, 'host') ]
+      - name: ServiceDirectory
+        value: ${{ parameters.ServiceDirectory }}
 
     timeoutInMinutes: ${{ parameters.TimeoutInMinutes }}
 
@@ -59,7 +61,7 @@ jobs:
       - ${{ parameters.PreSteps }}
 
       - template: /eng/common/pipelines/templates/steps/verify-agent-os.yml
-        ###target: $[coalesce(variables.Container, 'host')]
+        ###target: $(Target)
 
       - ${{ each step in parameters.TestSetupSteps }}:
         - ${{ each pair in step }}:
@@ -91,7 +93,7 @@ jobs:
             ${{ var.key }}: ${{ var.value }}
           ${{ each v in parameters.CloudConfig.SubscriptionConfiguration.EnvironmentVariables }}:
             ${{ v.key }}: ${{ v.value }}
-        target: $[coalesce(variables.Container, 'host')]
+        target: $(Target)
 
       - template: /eng/common/TestResources/remove-test-resources.yml
         parameters:
