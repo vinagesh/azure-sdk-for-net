@@ -26,6 +26,9 @@ parameters:
 - name: TestSetupSteps
   type: stepList
   default: []
+- name: Containers
+  type: object
+  default: []
 - name: CloudConfig
   type: object
   default: {}
@@ -49,15 +52,19 @@ jobs:
 
     timeoutInMinutes: ${{ parameters.TimeoutInMinutes }}
 
+    ${{ if parameters.Containers }}:
+      resources:
+        containers:
+          - ${{ parameters.Containers }}
+
     pool:
       vmImage: $(OSVmImage)
-    ${{ if variables['Container'] }}:
-      container: $(Container)
 
     steps:
       - ${{ parameters.PreSteps }}
 
       - template: /eng/common/pipelines/templates/steps/verify-agent-os.yml
+        ###target: $[coalesce(variables.Container, 'host')]
 
       - ${{ each step in parameters.TestSetupSteps }}:
         - ${{ each pair in step }}:
@@ -79,7 +86,6 @@ jobs:
           /p:IncludeSrc=false /p:IncludeSamples=false
           /p:BuildInParallel=${{ parameters.BuildInParallel }}
           $(AdditionalTestArguments)
-
         displayName: "Build & Test (all tests for $(TestTargetFramework))"
         env:
           DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
@@ -90,6 +96,7 @@ jobs:
             ${{ var.key }}: ${{ var.value }}
           ${{ each v in parameters.CloudConfig.SubscriptionConfiguration.EnvironmentVariables }}:
             ${{ v.key }}: ${{ v.value }}
+        target: $[coalesce(variables.Container, 'host')]
 
       - template: /eng/common/TestResources/remove-test-resources.yml
         parameters:

@@ -8,11 +8,13 @@ extends:
         OSVmImage: "ubuntu-18.04"
         TestTargetFramework: 'netcoreapp2.1'
         SupportedClouds: 'Public,Canary,Preview'
-#        Container:
-#          image: 'azsdkengsys.azurecr.io/dotnet/ubuntu_netcore_keyring:523386'
-#          endpoint: 'azsdkengsys'
-#          options: -ti --cap-add=IPC_LOCK
+        Container: 'ubuntu_netcore_keyring'
     ServiceDirectory: identity
+    Containers:
+      - container: 'ubuntu_netcore_keyring'
+        image: 'azsdkengsys.azurecr.io/dotnet/ubuntu_netcore_keyring:523386'
+        endpoint: 'azsdkengsys'
+        options: -ti --cap-add=IPC_LOCK
     PreSteps:
       - script: |
           set -x
@@ -22,6 +24,7 @@ extends:
           echo "##vso[task.setvariable variable=DBUS_SESSION_BUS_PID]$DBUS_SESSION_BUS_PID"
           echo "##vso[task.setvariable variable=GNOME_KEYRING_CONTROL]$GNOME_KEYRING_CONTROL"
         condition: eq($(System.JobName), 'Linux_NetCore_Keyring')
+        target: 'ubuntu_netcore_keyring'
       - pwsh: |
           [System.Convert]::FromBase64String($env:PFX_CONTENTS) | Set-Content -Path $(Agent.TempDirectory)/test.pfx -AsByteStream
           Set-Content -Path $(Agent.TempDirectory)/test.pem -Value $env:PEM_CONTENTS
