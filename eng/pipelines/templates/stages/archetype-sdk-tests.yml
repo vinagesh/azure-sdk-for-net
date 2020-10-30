@@ -52,8 +52,6 @@ parameters:
     Linux_NetCore:
       OSVmImage: "ubuntu-18.04"
       TestTargetFramework: netcoreapp2.1
-      #        PreSteps:
-      #  - template: /eng/common/pipelines/templates/steps/bypass-local-dns.yml
     Windows_NetCore:
       OSVmImage: "windows-2019"
       TestTargetFramework: netcoreapp2.1
@@ -77,19 +75,29 @@ parameters:
       TestMode: Record
       TestTargetFramework: netcoreapp2.1
       AdditionalTestArguments: /p:AutoUpdateSessionRecords=true
-      #      PostSteps:
-      #        - task: CopyFiles@2
-      #          displayName: "Copy Test Recordings"
-      #          inputs:
-      #            sourceFolder: '$(Build.SourcesDirectory)'
-      #            contents: 'sdk/${{ parameters.ServiceDirectory }}/**/SessionRecords/**/*.json'
-      #            targetFolder: '$(Build.ArtifactStagingDirectory)/SessionRecords'
-      #        - task: PublishBuildArtifacts@1
-      #          displayName: "Publish Test Recordings"
-      #          inputs:
-      #            pathToPublish: '$(Build.ArtifactStagingDirectory)/SessionRecords'
-      #            artifactName: SessionRecords
       SupportedClouds: 'AzureCloud'
+- name: PlatformPreSteps
+  type: object
+  default:
+    - template: /eng/common/pipelines/templates/steps/bypass-local-dns.yml
+      condition: eq($(System.JobName), 'Linux_NetCore')
+- name: PlatformPostSteps
+  type: object
+  default:
+    - task: CopyFiles@2
+      condition: eq($(System.JobName), 'Windows_NetCore_Record')
+      displayName: "Copy Test Recordings"
+      inputs:
+        sourceFolder: '$(Build.SourcesDirectory)'
+        contents: 'sdk/${{ parameters.ServiceDirectory }}/**/SessionRecords/**/*.json'
+        targetFolder: '$(Build.ArtifactStagingDirectory)/SessionRecords'
+    - task: PublishBuildArtifacts@1
+      condition: eq($(System.JobName), 'Windows_NetCore_Record')
+      displayName: "Publish Test Recordings"
+      inputs:
+        pathToPublish: '$(Build.ArtifactStagingDirectory)/SessionRecords'
+        artifactName: SessionRecords
+
 
 stages:
 - ${{ each cloud in parameters.CloudConfig }}:
@@ -99,12 +107,26 @@ stages:
       jobs:
       - template: ../jobs/archetype-sdk-tests-jobs.yml
         parameters:
+          PreSteps:
+            ${{ parameters.PlatformPreSteps }}
+            ${{ parameters.PreSteps }}
+          PostSteps:
+            ${{ parameters.PlatformPostSteps }}
+            ${{ parameters.PostSteps }}
+          EnvVars: ${{ parameters.EnvVars }}
+          MaxParallel: ${{ parameters.MaxParallel }}
+          BuildInParallel: ${{ parameters.BuildInParallel }}
+          TimeoutInMinutes: ${{ parameters.TimeoutInMinutes }}
+          Location: ${{ parameters.Location }}
+          ServiceDirectory: ${{ parameters.ServiceDirectory }}
+          TestSetupSteps: ${{ parameters.TestSetupSteps }}
           Platforms:
             ${{ each platform in parameters.Platforms }}:
+              ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
+                ${{ platform.key }}: ${{ platform.value }}
+            ${{ each platform in parameters.AdditionalPlatforms }}:
               ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
                 ${{ platform.key }}: ${{ platform.value }}
           CloudConfig:
             SubscriptionConfiguration: ${{ cloud.value.SubscriptionConfiguration }}
             Location: ${{ coalesce(parameters.Location, cloud.value.Location) }}
-          ${{ each param in parameters.AdditionalParameters }}:
-            ${{ param.key }}: ${{ param.value }}
