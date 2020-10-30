@@ -114,21 +114,22 @@ stages:
     - stage: ${{ cloud.key }}
       dependsOn: []
       jobs:
-      - template: ../jobs/archetype-sdk-tests-jobs.yml
+      - template: ../jobs/archetype-sdk-tests-host.yml
         parameters:
-          PreSteps:
-            - ${{ parameters.PlatformPreSteps }}
-            - ${{ parameters.PreSteps }}
-          PostSteps:
-            - ${{ parameters.PlatformPostSteps }}
-            - ${{ parameters.PostSteps }}
-          EnvVars: ${{ parameters.EnvVars }}
-          MaxParallel: ${{ parameters.MaxParallel }}
-          BuildInParallel: ${{ parameters.BuildInParallel }}
-          TimeoutInMinutes: ${{ parameters.TimeoutInMinutes }}
-          Location: ${{ parameters.Location }}
-          ServiceDirectory: ${{ parameters.ServiceDirectory }}
-          TestSetupSteps: ${{ parameters.TestSetupSteps }}
+          AdditionalParameters:
+            PreSteps:
+              - ${{ parameters.PlatformPreSteps }}
+              - ${{ parameters.PreSteps }}
+            PostSteps:
+              - ${{ parameters.PlatformPostSteps }}
+              - ${{ parameters.PostSteps }}
+            EnvVars: ${{ parameters.EnvVars }}
+            MaxParallel: ${{ parameters.MaxParallel }}
+            BuildInParallel: ${{ parameters.BuildInParallel }}
+            TimeoutInMinutes: ${{ parameters.TimeoutInMinutes }}
+            Location: ${{ parameters.Location }}
+            ServiceDirectory: ${{ parameters.ServiceDirectory }}
+            TestSetupSteps: ${{ parameters.TestSetupSteps }}
           Platforms:
             ${{ each platform in parameters.Platforms }}:
               ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:

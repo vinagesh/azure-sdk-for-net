@@ -1,0 +1,37 @@
+parameters:
+- name: AdditionalParameters
+  type: object
+- name: CloudConfig
+  type: object
+  default: {}
+- name: Platforms
+  type: object
+  default: {}
+
+jobs:
+  - template: ./archetype-sdk-tests-jobs.yml
+    parameters:
+      Platforms:
+        ${{ each platform in parameters.Platforms }}:
+          ${{ if not(platform.value.ContainerImage) }}:
+            ${{ platform.key }}: ${{ platform.value }}
+      CloudConfig: ${{ parameters.CloudConfig }}
+      Pool:
+        vmImage: $(OSVmImage)
+      ${{ each param in parameters.AdditionalParameters }}:
+        ${{ param.key }}: ${{ param.value }}
+  - template: ./archetype-sdk-tests-jobs.yml
+    parameters:
+      Platforms:
+        ${{ each platform in parameters.Platforms }}:
+          ${{ if platform.value.ContainerImage }}:
+            ${{ platform.key }}: ${{ platform.value }}
+      CloudConfig: ${{ parameters.CloudConfig }}
+      Pool:
+        vmImage: $(OSVmImage)
+        container:
+          image: $[ variables['ContainerImage'] ]
+          endpoint: $[ variables['ContainerEndpoint'] ]
+          options: $[ variables['ContainerOptions'] ]
+      ${{ each param in parameters.AdditionalParameters }}:
+        ${{ param.key }}: ${{ param.value }}
