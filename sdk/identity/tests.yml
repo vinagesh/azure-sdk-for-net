@@ -1,12 +1,14 @@
 trigger: none
 
-extends:
-  template: ../../eng/pipelines/templates/stages/archetype-sdk-tests.yml
-  resources:
+resources:
+  containers:
     - container: 'ubuntu_netcore_keyring'
       image: 'azsdkengsys.azurecr.io/dotnet/ubuntu_netcore_keyring:523386'
       endpoint: 'azsdkengsys'
       options: -ti --cap-add=IPC_LOCK
+
+extends:
+  template: ../../eng/pipelines/templates/stages/archetype-sdk-tests.yml
   parameters:
     AdditionalPlatforms:
       Linux_NetCore_Keyring:
