@@ -108,11 +108,11 @@ stages:
       - template: ../jobs/archetype-sdk-tests-jobs.yml
         parameters:
           PreSteps:
-            ${{ parameters.PlatformPreSteps }}
-            ${{ parameters.PreSteps }}
+            - ${{ parameters.PlatformPreSteps }}
+            - ${{ parameters.PreSteps }}
           PostSteps:
-            ${{ parameters.PlatformPostSteps }}
-            ${{ parameters.PostSteps }}
+            - ${{ parameters.PlatformPostSteps }}
+            - ${{ parameters.PostSteps }}
           EnvVars: ${{ parameters.EnvVars }}
           MaxParallel: ${{ parameters.MaxParallel }}
           BuildInParallel: ${{ parameters.BuildInParallel }}
