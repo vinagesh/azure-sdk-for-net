@@ -32,6 +32,9 @@ parameters:
 - name: TestSetupSteps
   type: stepList
   default: []
+- name: Containers
+  type: object
+  default: []
 - name: CloudConfig
   type: object
   default:
