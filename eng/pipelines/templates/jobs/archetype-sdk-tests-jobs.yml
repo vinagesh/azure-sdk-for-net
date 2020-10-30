@@ -38,9 +38,6 @@ parameters:
 - name: UsePlatformContainer
   type: boolean
   default: false
-- name: Pool
-  type: object
-  default: {}
 
 jobs:
   - job:
@@ -56,7 +53,11 @@ jobs:
 
     timeoutInMinutes: ${{ parameters.TimeoutInMinutes }}
 
-    pool: ${{ parameters.Pool }}
+    pool:
+      vmImage: $(OSVmImage)
+
+    ${{ if parameters.UsePlatformContainer }}:
+      container: $[ variables['Container'] ]
 
     steps:
       - ${{ parameters.PreSteps }}

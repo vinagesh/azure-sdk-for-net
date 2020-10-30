@@ -78,7 +78,7 @@ parameters:
       TestMode: Record
       TestTargetFramework: netcoreapp2.1
       AdditionalTestArguments: /p:AutoUpdateSessionRecords=true
-      SupportedClouds: 'AzureCloud'
+      SupportedClouds: 'Public'
 - name: PlatformPreSteps
   type: object
   default:

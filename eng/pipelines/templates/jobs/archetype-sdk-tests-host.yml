@@ -11,28 +11,21 @@ parameters:
 jobs:
   - template: ./archetype-sdk-tests-jobs.yml
     parameters:
+      UsePlatformContainer: false
       Platforms:
         ${{ each platform in parameters.Platforms }}:
-          ${{ if not(platform.value.ContainerImage) }}:
+          ${{ if not(platform.value.Container) }}:
             ${{ platform.key }}: ${{ platform.value }}
       CloudConfig: ${{ parameters.CloudConfig }}
-      Pool:
-        vmImage: $(OSVmImage)
-        container: host
       ${{ each param in parameters.AdditionalParameters }}:
         ${{ param.key }}: ${{ param.value }}
   - template: ./archetype-sdk-tests-jobs.yml
     parameters:
+      UsePlatformContainer: true
       Platforms:
         ${{ each platform in parameters.Platforms }}:
-          ${{ if platform.value.ContainerImage }}:
+          ${{ if platform.value.Container }}:
             ${{ platform.key }}: ${{ platform.value }}
       CloudConfig: ${{ parameters.CloudConfig }}
-      Pool:
-        vmImage: $(OSVmImage)
-        container:
-          image: $[ variables['ContainerImage'] ]
-          endpoint: $[ variables['ContainerEndpoint'] ]
-          options: $[ variables['ContainerOptions'] ]
       ${{ each param in parameters.AdditionalParameters }}:
         ${{ param.key }}: ${{ param.value }}
