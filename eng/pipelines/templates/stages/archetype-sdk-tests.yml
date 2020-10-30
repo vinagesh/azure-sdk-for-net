@@ -113,21 +113,21 @@ stages:
   #        AzureCloud_Public:
   #          SubscriptionConfiguration: $(sub-config-azure-cloud-test-resources-test)
 - ${{ each cloud in parameters.CloudConfig }}:
-  - ${{ if contains(parameters.Clouds, cloud.key) }}:
-    - stage: ${{ cloud.key }}
-      dependsOn: []
-      jobs:
-      - template: ../jobs/archetype-sdk-tests-jobs.yml
-        parameters:
-          Platforms:
-            ${{ each platform in parameters.Platforms }}:
-              ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
-                ${{ platform.key }}: ${{ platform.value }}
-          CloudConfig:
-            SubscriptionConfiguration: ${{ cloud.value }}
-            Location: ${{ coalesce(parameters.Location, cloud.value.Location) }}
-          ${{ each param in parameters.AdditionalParameters }}:
-            ${{ param.key }}: ${{ param.value }}
+  #  - ${{ if contains(parameters.Clouds, cloud.key) }}:
+  - stage: ${{ cloud.key }}
+    dependsOn: []
+    jobs:
+    - template: ../jobs/archetype-sdk-tests-jobs.yml
+      parameters:
+        Platforms:
+          ${{ each platform in parameters.Platforms }}:
+            ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
+              ${{ platform.key }}: ${{ platform.value }}
+        CloudConfig:
+          SubscriptionConfiguration: ${{ cloud.value }}
+          Location: ${{ coalesce(parameters.Location, cloud.value.Location) }}
+        ${{ each param in parameters.AdditionalParameters }}:
+          ${{ param.key }}: ${{ param.value }}
 
   ### - template: ./archetype-sdk-tests-clouds.yml
   ###   parameters:
