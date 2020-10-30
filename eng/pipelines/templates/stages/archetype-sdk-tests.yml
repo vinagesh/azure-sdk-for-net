@@ -88,20 +88,20 @@ parameters:
         and(
           succeededOrFailed(),
           eq(variables['OSVmImage'], 'ubuntu-18.04'),
-          eq($(System.JobName), 'Linux_NetCore')
+          eq(variables['Agent.JobName'], 'Linux_NetCore')
         )
 - name: PlatformPostSteps
   type: object
   default:
     - task: CopyFiles@2
-      condition: eq($(System.JobName), 'Windows_NetCore_Record')
+      condition: eq(variables['Agent.JobName'], 'Windows_NetCore_Record')
       displayName: "Copy Test Recordings"
       inputs:
         sourceFolder: '$(Build.SourcesDirectory)'
         contents: 'sdk/$(ServiceDirectory)/**/SessionRecords/**/*.json'
         targetFolder: '$(Build.ArtifactStagingDirectory)/SessionRecords'
     - task: PublishBuildArtifacts@1
-      condition: eq($(System.JobName), 'Windows_NetCore_Record')
+      condition: eq(variables['Agent.JobName'], 'Windows_NetCore_Record')
       displayName: "Publish Test Recordings"
       inputs:
         pathToPublish: '$(Build.ArtifactStagingDirectory)/SessionRecords'
