@@ -18,6 +18,7 @@ jobs:
       CloudConfig: ${{ parameters.CloudConfig }}
       Pool:
         vmImage: $(OSVmImage)
+        container: host
       ${{ each param in parameters.AdditionalParameters }}:
         ${{ param.key }}: ${{ param.value }}
   - template: ./archetype-sdk-tests-jobs.yml

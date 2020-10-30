@@ -4,7 +4,7 @@ parameters:
   default: {}
 - name: Clouds
   type: string
-  default: 'Public,Canary'
+  default: 'Public'
 - name: PreSteps
   type: object
   default: []
