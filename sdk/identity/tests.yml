@@ -2,6 +2,11 @@ trigger: none
 
 extends:
   template: ../../eng/pipelines/templates/stages/archetype-sdk-tests.yml
+  resources:
+    - container: 'ubuntu_netcore_keyring'
+      image: 'azsdkengsys.azurecr.io/dotnet/ubuntu_netcore_keyring:523386'
+      endpoint: 'azsdkengsys'
+      options: -ti --cap-add=IPC_LOCK
   parameters:
     AdditionalPlatforms:
       Linux_NetCore_Keyring:
@@ -10,11 +15,6 @@ extends:
         SupportedClouds: 'Public,Canary,Preview'
         Container: 'ubuntu_netcore_keyring'
     ServiceDirectory: identity
-    Containers:
-      - container: 'ubuntu_netcore_keyring'
-        image: 'azsdkengsys.azurecr.io/dotnet/ubuntu_netcore_keyring:523386'
-        endpoint: 'azsdkengsys'
-        options: -ti --cap-add=IPC_LOCK
     PreSteps:
       - script: |
           set -x

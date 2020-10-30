@@ -52,11 +52,6 @@ jobs:
 
     timeoutInMinutes: ${{ parameters.TimeoutInMinutes }}
 
-    ${{ if parameters.Containers }}:
-      resources:
-        containers:
-          - ${{ parameters.Containers }}
-
     pool:
       vmImage: $(OSVmImage)
 
