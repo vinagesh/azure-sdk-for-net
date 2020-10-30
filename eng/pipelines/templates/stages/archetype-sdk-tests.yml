@@ -4,7 +4,7 @@ parameters:
   default: {}
 - name: Clouds
   type: string
-  default: 'Public'
+  default: 'Public,Canary'
 - name: PreSteps
   type: object
   default: []
@@ -77,7 +77,7 @@ parameters:
       DisplayName: "Test on MacOS"
       OSVmImage: "macOS-10.15"
       TestTargetFramework: netcoreapp2.1
-      SupportedClouds: 'NotAvail'
+      SupportedClouds: 'Public'
           #      Windows_NetCore_Record:
           #        DisplayName: "Record on Windows for NetCoreApp"
           #        OSVmImage: "windows-2019"
