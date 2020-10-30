@@ -109,7 +109,7 @@ stages:
         parameters:
           PreSteps:
             - ${{ parameters.PlatformPreSteps }}
-            - ${{ parameters.PreSteps }}
+              #            - ${{ parameters.PreSteps }}
           PostSteps:
             - ${{ parameters.PlatformPostSteps }}
             - ${{ parameters.PostSteps }}
