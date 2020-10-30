@@ -132,9 +132,9 @@ stages:
             ${{ each platform in parameters.Platforms }}:
               ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
                 ${{ platform.key }}: ${{ platform.value }}
-            ${{ each platform in parameters.AdditionalPlatforms }}:
-              ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
-                ${{ platform.key }}: ${{ platform.value }}
+                #${{ each platform in parameters.AdditionalPlatforms }}:
+                #  ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
+                #    ${{ platform.key }}: ${{ platform.value }}
           CloudConfig:
             SubscriptionConfiguration: ${{ cloud.value.SubscriptionConfiguration }}
             Location: ${{ coalesce(parameters.Location, cloud.value.Location) }}
