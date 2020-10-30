@@ -79,8 +79,6 @@ parameters:
 - name: PlatformPreSteps
   type: object
   default:
-    - template: /eng/common/pipelines/templates/steps/bypass-local-dns.yml
-      condition: eq($(System.JobName), 'Linux_NetCore')
     - script: sudo ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
       displayName: Bypass local DNS server to workaround issue resolving cognitiveservices names
       condition: |
