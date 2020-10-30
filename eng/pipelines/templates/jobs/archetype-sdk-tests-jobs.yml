@@ -44,8 +44,8 @@ jobs:
       - template: ../variables/globals.yml
       - name: OSVmImage
         value: $(OSVmImage)
-      - name: ServiceDirectory
-        value: ${{ parameters.ServiceDirectory }}
+        #  - name: ServiceDirectory
+        #    value: ${{ parameters.ServiceDirectory }}
 
     timeoutInMinutes: ${{ parameters.TimeoutInMinutes }}
 
@@ -79,6 +79,7 @@ jobs:
           /p:IncludeSrc=false /p:IncludeSamples=false
           /p:BuildInParallel=${{ parameters.BuildInParallel }}
           $(AdditionalTestArguments)
+
         displayName: "Build & Test (all tests for $(TestTargetFramework))"
         env:
           DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
