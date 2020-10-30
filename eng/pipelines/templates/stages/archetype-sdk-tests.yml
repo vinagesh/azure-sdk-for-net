@@ -81,6 +81,14 @@ parameters:
   default:
     - template: /eng/common/pipelines/templates/steps/bypass-local-dns.yml
       condition: eq($(System.JobName), 'Linux_NetCore')
+    - script: sudo ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
+      displayName: Bypass local DNS server to workaround issue resolving cognitiveservices names
+      condition: |
+        and(
+          succeededOrFailed(),
+          eq(variables['OSVmImage'], 'ubuntu-18.04'),
+          eq($(System.JobName), 'Linux_NetCore')
+        )
 - name: PlatformPostSteps
   type: object
   default:
