@@ -53,7 +53,7 @@ jobs:
     pool:
       vmImage: $(OSVmImage)
 
-    container: 'host'
+    container: $[ variables['containerImage'] ]
 
     steps:
       - ${{ parameters.PreSteps }}
