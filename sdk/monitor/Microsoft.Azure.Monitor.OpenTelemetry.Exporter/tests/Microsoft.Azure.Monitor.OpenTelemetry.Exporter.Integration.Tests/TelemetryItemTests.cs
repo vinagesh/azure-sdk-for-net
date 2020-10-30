@@ -25,8 +25,6 @@ namespace Microsoft.Azure.Monitor.OpenTelemetry.Exporter.Integration.Tests
     /// </summary>
     public class TelemetryItemTests
     {
-        private const string ActivitySourceName = "MyCompany.MyProduct.MyLibrary";
-        private static readonly ActivitySource MyActivitySource = new ActivitySource(ActivitySourceName);
         private const string EmptyConnectionString = "InstrumentationKey=00000000-0000-0000-0000-000000000000";
 
         /// <summary>
@@ -45,9 +43,9 @@ namespace Microsoft.Azure.Monitor.OpenTelemetry.Exporter.Integration.Tests
         {
             var activityName = "TestActivity";
 
-            var telemetryItem = this.RunActivityTest(() =>
+            var telemetryItem = this.RunActivityTest((activitySource) =>
             {
-                using (var activity = MyActivitySource.StartActivity(name: activityName, kind: activityKind))
+                using (var activity = activitySource.StartActivity(name: activityName, kind: activityKind))
                 {
                     activity.SetTag("integer", 1);
                     activity.SetTag("message", "Hello World!");
@@ -81,9 +79,12 @@ namespace Microsoft.Azure.Monitor.OpenTelemetry.Exporter.Integration.Tests
                 });
         }
 
-        private TelemetryItem RunActivityTest(Action testScenario)
+        private TelemetryItem RunActivityTest(Action<ActivitySource> testScenario)
         {
             // SETUP
+            var ActivitySourceName = "MyCompany.MyProduct.MyLibrary";
+            var activitySource = new ActivitySource(ActivitySourceName);
+
             var transmitter = new MockTransmitter();
             var processor = new BatchExportProcessor<Activity>(new AzureMonitorTraceExporter(
                 options: new AzureMonitorExporterOptions
@@ -99,7 +100,7 @@ namespace Microsoft.Azure.Monitor.OpenTelemetry.Exporter.Integration.Tests
                 .Build();
 
             // ACT
-            testScenario();
+            testScenario(activitySource);
 
             // CLEANUP
             processor.ForceFlush();
