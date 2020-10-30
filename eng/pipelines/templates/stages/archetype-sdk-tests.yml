@@ -77,7 +77,6 @@ parameters:
       OSVmImage: "windows-2019"
       TestMode: Record
       TestTargetFramework: netcoreapp2.1
-      AdditionalTestArguments: /p:AutoUpdateSessionRecords=true
       SupportedClouds: 'Public'
 - name: PlatformPreSteps
   type: object
