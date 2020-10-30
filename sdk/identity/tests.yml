@@ -7,10 +7,7 @@ extends:
       Linux_NetCore_Keyring:
         OSVmImage: "ubuntu-18.04"
         TestTargetFramework: netcoreapp2.1
-#        Container:
-#          image: 'azsdkengsys.azurecr.io/dotnet/ubuntu_netcore_keyring:523386'
-#          endpoint: 'azsdkengsys'
-#          options: -ti --cap-add=IPC_LOCK
+        SupportedClouds: 'Public,Canary,Preview'
     ServiceDirectory: identity
     PreSteps:
       - script: |
