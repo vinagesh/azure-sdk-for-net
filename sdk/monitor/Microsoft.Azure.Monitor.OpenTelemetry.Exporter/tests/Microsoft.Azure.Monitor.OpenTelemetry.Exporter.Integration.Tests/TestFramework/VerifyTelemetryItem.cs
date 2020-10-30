@@ -12,7 +12,6 @@ namespace Microsoft.Azure.Monitor.OpenTelemetry.Exporter.Integration.Tests.TestF
 {
     public static class VerifyTelemetryItem
     {
-
         public static void Verify(TelemetryItem telemetryItem, ActivityKind activityKind, ExpectedTelemetryItemValues expectedVars)
         {
             switch (activityKind)
@@ -49,6 +48,15 @@ namespace Microsoft.Azure.Monitor.OpenTelemetry.Exporter.Integration.Tests.TestF
             var data = (RemoteDependencyData)telemetryItem.Data.BaseData;
             Assert.Equal(expectedVars.Name, data.Name);
             Assert.Equal(expectedVars.CustomProperties, data.Properties);
+        }
+
+        public static void VerifyEvent(TelemetryItem telemetryItem, ExpectedTelemetryItemValues expectedVars)
+        {
+            Assert.Equal("Event", telemetryItem.Name);
+            Assert.Equal("EventData", telemetryItem.Data.BaseType);
+
+            var data = (TelemetryEventData)telemetryItem.Data.BaseData;
+            Assert.Equal(expectedVars.Name, data.Name);
         }
     }
 }
