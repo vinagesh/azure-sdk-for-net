@@ -73,11 +73,11 @@ parameters:
           #        OSVmImage: "windows-2019"
           #        TestTargetFramework: net461
           #        AdditionalTestArguments: /p:UseProjectReferenceToAzureClients=true
-          #      MacOS:
-          #        DisplayName: "Test on MacOS"
-          #        OSVmImage: "macOS-10.15"
-          #        TestTargetFramework: netcoreapp2.1
-          #        SupportedClouds: 'AzureCloud'
+    MacOS:
+      DisplayName: "Test on MacOS"
+      OSVmImage: "macOS-10.15"
+      TestTargetFramework: netcoreapp2.1
+      SupportedClouds: 'NotAvail'
           #      Windows_NetCore_Record:
           #        DisplayName: "Record on Windows for NetCoreApp"
           #        OSVmImage: "windows-2019"
@@ -108,8 +108,8 @@ stages:
         parameters:
           Platforms:
             ${{ each platform in parameters.Platforms }}:
-            #   #${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
-              ${{ platform.key }}: ${{ platform.value }}
+              ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
+                ${{ platform.key }}: ${{ platform.value }}
           CloudConfig:
             SubscriptionConfiguration: ${{ cloud.value.SubscriptionConfiguration }}
             Location: ${{ coalesce(parameters.Location, cloud.value.Location) }}
