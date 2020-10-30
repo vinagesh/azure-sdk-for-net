@@ -124,7 +124,7 @@ stages:
             ${{ if contains(coalesce(platform.value.SupportedClouds, parameters.Clouds), cloud.key) }}:
               ${{ platform.key }}: ${{ platform.value }}
         CloudConfig:
-          SubscriptionConfiguration: ${{ cloud.value }}
+          SubscriptionConfiguration: ${{ cloud.value.SubscriptionConfiguration }}
           Location: ${{ coalesce(parameters.Location, cloud.value.Location) }}
         ${{ each param in parameters.AdditionalParameters }}:
           ${{ param.key }}: ${{ param.value }}
