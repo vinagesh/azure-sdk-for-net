@@ -50,36 +50,29 @@ parameters:
   type: object
   default:
     Linux_NetCore:
-      DisplayName: "Test on Linux"
       OSVmImage: "ubuntu-18.04"
       TestTargetFramework: netcoreapp2.1
       #        PreSteps:
       #  - template: /eng/common/pipelines/templates/steps/bypass-local-dns.yml
     Windows_NetCore:
-      DisplayName: "Test on Windows for NetCoreApp"
       OSVmImage: "windows-2019"
       TestTargetFramework: netcoreapp2.1
     Windows_NetCore_ProjectRefAzureClients:
-      DisplayName: "Test on Windows for NetCoreApp with UseProjectReferenceToAzureClients=true"
       OSVmImage: "windows-2019"
       TestTargetFramework: netcoreapp2.1
       AdditionalTestArguments: /p:UseProjectReferenceToAzureClients=true
     Windows_NetFramework:
-      DisplayName: "Test on Windows for .Net Framework"
       OSVmImage: "windows-2019"
       TestTargetFramework: net461
     Windows_NetFramework_ProjectRefAzureClients:
-      DisplayName: "Test on Windows for .Net Framework with UseProjectReferenceToAzureClients=true"
       OSVmImage: "windows-2019"
       TestTargetFramework: net461
       AdditionalTestArguments: /p:UseProjectReferenceToAzureClients=true
     MacOS:
-      DisplayName: "Test on MacOS"
       OSVmImage: "macOS-10.15"
       TestTargetFramework: netcoreapp2.1
       SupportedClouds: 'Public'
     Windows_NetCore_Record:
-      DisplayName: "Record on Windows for NetCoreApp"
       OSVmImage: "windows-2019"
       TestMode: Record
       TestTargetFramework: netcoreapp2.1

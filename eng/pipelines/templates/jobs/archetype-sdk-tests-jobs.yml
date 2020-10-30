@@ -39,7 +39,6 @@ jobs:
       maxParallel: ${{ parameters.MaxParallel }}
       matrix: ${{ parameters.Platforms }}
 
-    displayName: $(DisplayName)
     condition: and(succeededOrFailed(), eq(eq(variables['Record'], 'true'), eq('$(TestMode)', 'Record')))
     variables:
       - template: ../variables/globals.yml
