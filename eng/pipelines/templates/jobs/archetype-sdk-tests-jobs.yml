@@ -45,10 +45,6 @@ jobs:
     condition: and(succeededOrFailed(), eq(eq(variables['Record'], 'true'), eq('$(TestMode)', 'Record')))
     variables:
       - template: ../variables/globals.yml
-      - name: OSVmImage
-        value: $(OSVmImage)
-      - name: Target
-        value: $[ coalesce(variables.Container, 'host') ]
       - name: ServiceDirectory
         value: ${{ parameters.ServiceDirectory }}
 
@@ -57,11 +53,12 @@ jobs:
     pool:
       vmImage: $(OSVmImage)
 
+    container: 'host'
+
     steps:
       - ${{ parameters.PreSteps }}
 
       - template: /eng/common/pipelines/templates/steps/verify-agent-os.yml
-        ###target: $(Target)
 
       - ${{ each step in parameters.TestSetupSteps }}:
         - ${{ each pair in step }}:
@@ -93,7 +90,6 @@ jobs:
             ${{ var.key }}: ${{ var.value }}
           ${{ each v in parameters.CloudConfig.SubscriptionConfiguration.EnvironmentVariables }}:
             ${{ v.key }}: ${{ v.value }}
-        target: $(TestTargetFramework)
 
       - template: /eng/common/TestResources/remove-test-resources.yml
         parameters:
