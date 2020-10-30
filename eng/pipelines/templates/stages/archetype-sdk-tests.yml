@@ -89,7 +89,7 @@ parameters:
       displayName: "Copy Test Recordings"
       inputs:
         sourceFolder: '$(Build.SourcesDirectory)'
-        contents: 'sdk/${{ parameters.ServiceDirectory }}/**/SessionRecords/**/*.json'
+        contents: 'sdk/$(ServiceDirectory)/**/SessionRecords/**/*.json'
         targetFolder: '$(Build.ArtifactStagingDirectory)/SessionRecords'
     - task: PublishBuildArtifacts@1
       condition: eq($(System.JobName), 'Windows_NetCore_Record')
