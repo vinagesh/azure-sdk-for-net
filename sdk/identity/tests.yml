@@ -3,11 +3,11 @@ trigger: none
 extends:
   template: ../../eng/pipelines/templates/stages/archetype-sdk-tests.yml
   parameters:
-    #    AdditionalPlatforms:
-    #      Linux_NetCore_Keyring:
-    #        OSVmImage: "ubuntu-18.04"
-    #        TestTargetFramework: 'netcoreapp2.1'
-    #        SupportedClouds: 'Public,Canary,Preview'
+    AdditionalPlatforms:
+      Linux_NetCore_Keyring:
+        OSVmImage: "ubuntu-18.04"
+        TestTargetFramework: 'netcoreapp2.1'
+        SupportedClouds: 'Public,Canary,Preview'
 #        Container:
 #          image: 'azsdkengsys.azurecr.io/dotnet/ubuntu_netcore_keyring:523386'
 #          endpoint: 'azsdkengsys'

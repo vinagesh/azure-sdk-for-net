@@ -116,7 +116,7 @@ stages:
       - template: ../jobs/archetype-sdk-tests-jobs.yml
         parameters:
           PreSteps:
-            #- ${{ parameters.PlatformPreSteps }}
+            - ${{ parameters.PlatformPreSteps }}
             - ${{ parameters.PreSteps }}
           PostSteps:
             - ${{ parameters.PlatformPostSteps }}
