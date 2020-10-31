@@ -23,23 +23,22 @@ namespace Azure.DigitalTwins.Core
 
             if (reader.TokenType != JsonTokenType.StartObject)
             {
-                throw new JsonException($"Unexpected token type {reader.TokenType} at index {reader.TokenStartIndex} Expected JsonTokenType.StartObject.");
+                throw new JsonException($"Unexpected token type {reader.TokenType} at index {reader.TokenStartIndex}. Expected JsonTokenType.StartObject.");
             }
 
-            var metadata = new DigitalTwinMetadata();
             reader.Read(); // Advance into our object.
+            var metadata = new DigitalTwinMetadata();
 
             // Until we reach the end of the object we began reading
             while (reader.TokenType != JsonTokenType.EndObject)
             {
-                string tokenName = reader.GetString();
-
                 if (reader.TokenType != JsonTokenType.PropertyName)
                 {
-                    throw new JsonException($"Unexpected token {reader.TokenType} {tokenName} found in DigitalTwinMetadata at index {reader.TokenStartIndex}, position {reader.Position}");
+                    throw new JsonException();
                 }
 
-                string propertyName = tokenName;
+                string propertyName = reader.GetString();
+
                 reader.Read(); // advance to the next token
 
                 if (propertyName == DigitalTwinsJsonPropertyNames.MetadataModel)
@@ -49,6 +48,11 @@ namespace Azure.DigitalTwins.Core
                 else if (reader.TokenType == JsonTokenType.StartObject)
                 {
                     metadata.PropertyMetadata[propertyName] = JsonSerializer.Deserialize<DigitalTwinPropertyMetadata>(ref reader, options);
+                }
+                else
+                {
+                    // Unexpected
+                    throw new JsonException();
                 }
 
                 reader.Read(); // Finished consuming the token
