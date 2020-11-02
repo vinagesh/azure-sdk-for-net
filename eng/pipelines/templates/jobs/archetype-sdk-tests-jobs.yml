@@ -48,6 +48,7 @@ jobs:
     condition: and(succeededOrFailed(), eq(eq(variables['Record'], 'true'), eq('$(TestMode)', 'Record')))
     variables:
       - template: ../variables/globals.yml
+      # ServiceDirectory references must get passed down by the caller as variable references
       - name: ServiceDirectory
         value: ${{ parameters.ServiceDirectory }}
 

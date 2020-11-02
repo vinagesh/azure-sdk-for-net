@@ -97,6 +97,8 @@ parameters:
       displayName: "Copy Test Recordings"
       inputs:
         sourceFolder: '$(Build.SourcesDirectory)'
+        # NOTE: ServiceDirectory cannot be passed as a compile time value, because it cannot be rendered
+        # in the context of a parameter definition.
         contents: 'sdk/$(ServiceDirectory)/**/SessionRecords/**/*.json'
         targetFolder: '$(Build.ArtifactStagingDirectory)/SessionRecords'
     - task: PublishBuildArtifacts@1
