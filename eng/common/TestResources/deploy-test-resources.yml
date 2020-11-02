@@ -42,7 +42,7 @@ steps:
         -ServiceDirectory ${{ parameters.ServiceDirectory }} `
         -Location '${{ parameters.Location }}' `
         -DeleteAfterHours ${{ parameters.DeleteAfterHours }} `
-        -AdditionalParameters $additionalParameters `
+        -AdditionalParameters $armTemplateParameters `
         @subscriptionConfiguration `
         -CI `
         -Force `
