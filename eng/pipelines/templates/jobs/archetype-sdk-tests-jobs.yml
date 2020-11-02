@@ -75,16 +75,16 @@ jobs:
           ServiceDirectory: '${{ parameters.ServiceDirectory }}'
           SubscriptionConfiguration: ${{ parameters.CloudConfig.SubscriptionConfiguration }}
 
-      - script: >
-          dotnet test eng/service.proj
-          --framework $(TestTargetFramework)
-          --filter "TestCategory!=Manually"
-          --logger "trx"
-          --logger:"console;verbosity=normal"
-          /p:ServiceDirectory=${{ parameters.ServiceDirectory }}
-          /p:IncludeSrc=false /p:IncludeSamples=false
+      - script: |
+          dotnet test eng/service.proj \
+          --framework $(TestTargetFramework) \
+          --filter "TestCategory!=Manually" \
+          --logger "trx" \
+          --logger:"console;verbosity=normal" \
+          /p:ServiceDirectory=${{ parameters.ServiceDirectory }} \
+          /p:IncludeSrc=false /p:IncludeSamples=false \
           /p:BuildInParallel=${{ parameters.BuildInParallel }}
-          /p:$(AdditionalTestArguments)
+          $(AdditionalTestArguments) ;
 
         displayName: "Build & Test (all tests for $(TestTargetFramework))"
         env:
