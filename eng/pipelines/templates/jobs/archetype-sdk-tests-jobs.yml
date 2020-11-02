@@ -76,6 +76,8 @@ jobs:
           SubscriptionConfiguration: ${{ parameters.CloudConfig.SubscriptionConfiguration }}
 
       - pwsh: |
+          Set-PsDebug -Trace 1
+
           dotnet test eng/service.proj `
           --framework $(TestTargetFramework) `
           --filter "TestCategory!=Manually" `
