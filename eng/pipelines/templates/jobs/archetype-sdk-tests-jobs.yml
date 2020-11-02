@@ -84,7 +84,7 @@ jobs:
           /p:ServiceDirectory=${{ parameters.ServiceDirectory }}
           /p:IncludeSrc=false /p:IncludeSamples=false
           /p:BuildInParallel=${{ parameters.BuildInParallel }}
-          $(AdditionalTestArguments)
+          /p:$(AdditionalTestArguments)
 
         displayName: "Build & Test (all tests for $(TestTargetFramework))"
         env:
